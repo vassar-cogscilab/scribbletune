@@ -7,12 +7,21 @@
 <button id="play">PLAY SOUND</button>
 </body>
 <script>
+
+var ohClip = scribble.clip({
+  pattern: '[-x][-x][-x][xx]',
+  sample: 'https://scribbletune.com/sounds/oh.wav'
+});
+
 document.querySelector('#play').addEventListener('click', function(){
     Tone.context.resume();
-    scribble.clip({
+    /*scribble.clip({
         pattern: 'xxxx', // or just x since we dont have any variation
         sample: 'https://scribbletune.com/sounds/kick.wav'
-    }).start();
+    }).start();*/
+
+    ohClip.start();
+    
 })
 </script>
 </html>
