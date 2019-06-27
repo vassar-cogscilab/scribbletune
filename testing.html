@@ -1,0 +1,18 @@
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/13.3.1/Tone.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/scribbletune/1.9.4/scribbletune.js"></script>
+</head>
+<body>
+<button id="play">PLAY SOUND</button>
+</body>
+<script>
+document.querySelector('#play').addEventListener('click', function(){
+    Tone.context.resume();
+    scribble.clip({
+        pattern: 'xxxx', // or just x since we dont have any variation
+        sample: 'https://scribbletune.com/sounds/kick.wav'
+    }).start();
+})
+</script>
+</html>
