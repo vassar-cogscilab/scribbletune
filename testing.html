@@ -9,19 +9,14 @@
 <script>
 
 var ohClip = scribble.clip({
-  pattern: '[-x][-x][-x][xx]',
+  pattern: '[xx][-x][-x][x-]',
   sample: 'https://scribbletune.com/sounds/oh.wav'
 });
 
 document.querySelector('#play').addEventListener('click', function(){
     Tone.context.resume();
-    /*scribble.clip({
-        pattern: 'xxxx', // or just x since we dont have any variation
-        sample: 'https://scribbletune.com/sounds/kick.wav'
-    }).start();*/
-
     ohClip.start();
-    
+    Tone.Transport.start();    
 })
 </script>
 </html>
