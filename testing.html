@@ -4,19 +4,44 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/scribbletune/1.9.4/scribbletune.js"></script>
 </head>
 <body>
-<button id="play">PLAY SOUND</button>
+  <button id="new">NEW PATTERN</button>
 </body>
 <script>
 
-var ohClip = scribble.clip({
-  pattern: '[xx][-x][-x][x-]',
-  sample: 'https://scribbletune.com/sounds/oh.wav'
-});
+function generatePattern(num_beats){
+  var pattern = '';
+  for(var i=0; i<num_beats; i++){
+    pattern = pattern + '['
+    for(var a=0; a<2; a++){
+      if(Math.random() < 0.5){
+        pattern = pattern + 'x';
+      } else {
+        pattern = pattern + '-';
+      }
+    }
+    pattern = pattern + ']'
+  }
+  return pattern;
+}
 
-document.querySelector('#play').addEventListener('click', function(){
-    Tone.context.resume();
-    ohClip.start();
-    Tone.Transport.start();    
+document.querySelector('#new').addEventListener('click', function(){
+
+  Tone.context.resume();
+  Tone.Transport.stop();
+
+  var ohClip = scribble.clip({
+    pattern: generatePattern(8),
+    sample: 'http://jdeleeuw.vassarcis.net/audiopref/wav/low.wav'
+  });
+
+  var ohClip2 = scribble.clip({
+    pattern: generatePattern(8),
+    sample: 'http://jdeleeuw.vassarcis.net/audiopref/wav/high.wav'
+  });
+
+  ohClip.start();
+  ohClip2.start();
+  Tone.Transport.start();    
 })
 </script>
 </html>
