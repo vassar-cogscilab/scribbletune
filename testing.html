@@ -58,6 +58,9 @@ document.querySelector('#new').addEventListener('click', function(){
     sample: 'wav/high.wav'
   });
 
+  ohClip.loop = 2;
+  ohClip2.loop = 2;
+
   ohClip.start();
   ohClip2.start();
   Tone.Transport.bpm.value = 240;
