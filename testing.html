@@ -8,34 +8,53 @@
 </body>
 <script>
 
-function generatePattern(num_beats){
-  var pattern = '';
-  for(var i=0; i<num_beats; i++){
-    pattern = pattern + '['
-    for(var a=0; a<2; a++){
-      if(Math.random() < 0.5){
-        pattern = pattern + 'x';
+// ['l','h','r']
+
+function generatePattern(num_eigth_notes){
+  var pattern = [];
+
+  for(var b=0; b<num_eigth_notes;b++){
+      if(Math.random() < 0.33){
+        pattern.push('l');
+      } else if(Math.random() < 0.5 ) {
+        pattern.push('r') ;
       } else {
-        pattern = pattern + '-';
+        pattern.push('h') ;
       }
-    }
-    pattern = pattern + ']'
   }
-  return pattern;
+  
+  return(pattern);
 }
 
+function convertPatternToBeatString(pattern, note){
+  var string = '';
+  for(var i=0; i<pattern.length; i++){
+    pattern[i] == note
+     
+    if (pattern[i]==note) {
+      string=string +'x'
+    } else {
+      string=string +'-'
+    }
+  }
+  return string;
+}
+
+
 document.querySelector('#new').addEventListener('click', function(){
+
+  var pattern = generatePattern(16)
 
   Tone.context.resume();
   Tone.Transport.stop();
 
   var ohClip = scribble.clip({
-    pattern: generatePattern(8),
+    pattern: convertPatternToBeatString(pattern, 'l'),
     sample: 'http://jdeleeuw.vassarcis.net/audiopref/wav/low.wav'
   });
 
   var ohClip2 = scribble.clip({
-    pattern: generatePattern(8),
+    pattern: convertPatternToBeatString(pattern, 'h'),
     sample: 'http://jdeleeuw.vassarcis.net/audiopref/wav/high.wav'
   });
 
