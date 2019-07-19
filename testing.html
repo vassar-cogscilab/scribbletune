@@ -71,8 +71,10 @@ function PlayPattern(id){
   var pattern = patterns[id];
 
   Tone.context.resume();
-  highClip.stop();
-  lowClip.stop();
+  if(typeof highClip !== 'undefined'){
+    highClip.stop();
+    lowClip.stop();
+  }
   Tone.Transport.stop();
 
   lowClip = scribble.clip({
