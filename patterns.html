@@ -2,7 +2,6 @@
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/13.3.1/Tone.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/scribbletune/1.9.4/scribbletune.js"></script>
-    <script src= "patterns.js"> </script>
 </head>
 <body>
   <button id="new">NEW PATTERN</button>
@@ -41,31 +40,20 @@ function convertPatternToBeatString(pattern, note){
   return string;
 }
 
+var finalpattern = [] ;
 
-document.querySelector('#new').addEventListener('click', function(){
+for (var t=0; t<100 ; t++) {
+    var pattern = generatePattern(16)
+    
+    for (var i=0; i<finalpattern.length; i++) {
+        console.log(JSON.stringify(pattern) == JSON.stringify(finalpattern[i]));
+    }
 
-  var pattern = patterns[40];
+    finalpattern.push(pattern)
+};
 
-  Tone.context.resume();
-  Tone.Transport.stop();
+console.log(JSON.stringify(finalpattern));
 
-  var ohClip = scribble.clip({
-    pattern: convertPatternToBeatString(pattern, 'l'),
-    sample: 'wav/low.wav'
-  });
 
-  var ohClip2 = scribble.clip({
-    pattern: convertPatternToBeatString(pattern, 'h'),
-    sample: 'wav/high.wav'
-  });
-
-  ohClip.loop = 2;
-  ohClip2.loop = 2;
-
-  ohClip.start();
-  ohClip2.start();
-  Tone.Transport.bpm.value = 240;
-  Tone.Transport.start();    
-})
 </script>
 </html>
