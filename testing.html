@@ -58,6 +58,8 @@ function convertPatternToBeatString(pattern, note){
   return string;
 }
 
+var highClip;
+var lowClip;
 
 function PlayPattern(id){
 
@@ -69,23 +71,25 @@ function PlayPattern(id){
   var pattern = patterns[id];
 
   Tone.context.resume();
+  highClip.stop();
+  lowClip.stop();
   Tone.Transport.stop();
 
-  var ohClip = scribble.clip({
+  lowClip = scribble.clip({
     pattern: convertPatternToBeatString(pattern, 'l'),
     sample: 'wav/low.wav'
   });
 
-  var ohClip2 = scribble.clip({
+  highClip = scribble.clip({
     pattern: convertPatternToBeatString(pattern, 'h'),
     sample: 'wav/high.wav'
   });
 
-  ohClip.loop = 2;
-  ohClip2.loop = 2;
+  lowClip.loop = 2;
+  highClip.loop = 2;
 
-  ohClip.start();
-  ohClip2.start();
+  lowClip.start();
+  highClip.start();
   Tone.Transport.bpm.value = 240;
   Tone.Transport.start();
 }
