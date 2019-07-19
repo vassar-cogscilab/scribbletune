@@ -6,8 +6,18 @@
 </head>
 <body>
   <button id="new">NEW PATTERN</button>
+  <div id="patternsList">
+    <ol>
+
+    </ol>
+  </div>
 </body>
 <script>
+
+for (var l=0; l<100; l++) {
+  document.querySelector('#patternsList ol').insertAdjacentHTML('beforeend', '<li onclick="PlayPattern('+l+')>' + patterns[l] + '</li>')
+}
+
 
 // ['l','h','r']
 
@@ -41,6 +51,31 @@ function convertPatternToBeatString(pattern, note){
   return string;
 }
 
+
+function PlayPattern(id){
+  var pattern = patterns[id];
+
+  Tone.context.resume();
+  Tone.Transport.stop();
+
+  var ohClip = scribble.clip({
+    pattern: convertPatternToBeatString(pattern, 'l'),
+    sample: 'wav/low.wav'
+  });
+
+  var ohClip2 = scribble.clip({
+    pattern: convertPatternToBeatString(pattern, 'h'),
+    sample: 'wav/high.wav'
+  });
+
+  ohClip.loop = 2;
+  ohClip2.loop = 2;
+
+  ohClip.start();
+  ohClip2.start();
+  Tone.Transport.bpm.value = 240;
+  Tone.Transport.start();
+}
 
 document.querySelector('#new').addEventListener('click', function(){
 
