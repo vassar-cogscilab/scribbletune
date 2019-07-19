@@ -22,7 +22,7 @@
 <script>
 
 for (var l=0; l<100; l++) {
-  document.querySelector('#patternsList ol').insertAdjacentHTML('beforeend', '<li id="'+l+'" onclick="PlayPattern('+l+')">' + patterns[l] + '</li>')
+  document.querySelector('#patternsList ol').insertAdjacentHTML('beforeend', '<li id="pattern'+l+'" onclick="PlayPattern('+l+')">' + patterns[l] + '</li>')
 }
 
 
@@ -64,7 +64,7 @@ function PlayPattern(id){
   document.querySelectorAll('li').forEach(function(el){
     el.className = '';
   });
-  document.querySelector('#'+id).className = "active";
+  document.querySelector('#pattern'+id).className = "active";
 
   var pattern = patterns[id];
 
