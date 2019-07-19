@@ -3,6 +3,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/13.3.1/Tone.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/scribbletune/1.9.4/scribbletune.js"></script>
     <script src= "patterns.js"> </script>
+    <style> 
+    li{padding: 10px ;
+       
+       cursor: pointer ;}
+       li.active{font-weight:bold;}
+
+    </style>
 </head>
 <body>
   <button id="new">NEW PATTERN</button>
@@ -15,7 +22,7 @@
 <script>
 
 for (var l=0; l<100; l++) {
-  document.querySelector('#patternsList ol').insertAdjacentHTML('beforeend', '<li onclick="PlayPattern('+l+')">' + patterns[l] + '</li>')
+  document.querySelector('#patternsList ol').insertAdjacentHTML('beforeend', '<li id="'+l+'" onclick="PlayPattern('+l+')">' + patterns[l] + '</li>')
 }
 
 
@@ -53,6 +60,12 @@ function convertPatternToBeatString(pattern, note){
 
 
 function PlayPattern(id){
+
+  document.querySelectorAll('li').forEach(function(el){
+    el.className = '';
+  });
+  document.querySelector('#'+id).className = "active";
+
   var pattern = patterns[id];
 
   Tone.context.resume();
