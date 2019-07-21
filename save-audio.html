@@ -32,6 +32,20 @@ document.querySelector('#next').addEventListener('click', function(){
   pattern++;
 });
 
+function convertPatternToBeatString(pattern, note){
+  var string = '';
+  for(var i=0; i<pattern.length; i++){
+    pattern[i] == note
+     
+    if (pattern[i]==note) {
+      string=string +'x'
+    } else {
+      string=string +'-'
+    }
+  }
+  return string;
+}
+
 function PlayPattern(id){
 
   var pattern = patterns[id];
