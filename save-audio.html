@@ -1,0 +1,72 @@
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/13.3.1/Tone.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/scribbletune/1.9.4/scribbletune.js"></script>
+    <script src= "patterns.js"> </script>
+</head>
+<body>
+  <button id="next">PLAY NEXT</button>
+  <audio id="x" controls></audio>
+</body>
+<script>
+
+var audio = document.querySelector('#x');
+var actx = actx;
+var dest = actx.createMediaStreamDestination();
+var recorder = new MediaRecorder(dest.stream);
+var highClip;
+var lowClip;
+var pattern = 0;
+
+var chunks = [];
+recorder.ondataavailable = function(e){
+  chunks.push(e.data);
+}
+recorder.onstop = function(){
+  var blob = new Blob(chunks, { type: 'audio/ogg; codecs=opus' });
+  audio.src = URL.createObjectURL(blob);
+}
+
+document.querySelector('#next').addEventListener('click', function(){
+  PlayPattern(pattern);
+  pattern++;
+});
+
+function PlayPattern(id){
+
+  var pattern = patterns[id];
+
+  actx.resume();
+  // if(typeof highClip !== 'undefined'){
+  //   highClip.stop();
+  //   lowClip.stop();
+  // }
+  // Tone.Transport.stop();
+
+  lowClip = scribble.clip({
+    pattern: convertPatternToBeatString(pattern, 'l'),
+    sample: 'wav/low.wav'
+  });
+
+  highClip = scribble.clip({
+    pattern: convertPatternToBeatString(pattern, 'h'),
+    sample: 'wav/high.wav'
+  });
+
+  lowClip.loop = 2;
+  highClip.loop = 2;
+
+  lowClip.start();
+  highClip.start();
+  
+  Tone.Transport.schedule(function(){
+    recorder.stop();
+    Tone.Transport.stop();
+  }, "16n");
+
+  Tone.Transport.bpm.value = 240;
+  Tone.Transport.start();
+}
+
+</script>
+</html>
