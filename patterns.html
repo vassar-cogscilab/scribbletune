@@ -13,11 +13,15 @@
 function generatePattern(num_eigth_notes){
   var pattern = [];
 
+  var rest_prob = Math.random();
+  var low_prob = Math.random();
+  //var high_prob = Math.random();
+
   for(var b=0; b<num_eigth_notes;b++){
-      if(Math.random() < 0.33){
-        pattern.push('l');
-      } else if(Math.random() < 0.5 ) {
-        pattern.push('r') ;
+      if(Math.random() < rest_prob){
+        pattern.push('r');
+      } else if(Math.random() < low_prob ) {
+        pattern.push('l') ;
       } else {
         pattern.push('h') ;
       }
