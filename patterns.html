@@ -13,7 +13,7 @@
 function generatePattern(num_eigth_notes){
   var pattern = [];
 
-  var rest_prob = Math.random();
+  var rest_prob = 0.1 + Math.random()*0.7;
   var low_prob = Math.random();
   //var high_prob = Math.random();
 
@@ -29,6 +29,55 @@ function generatePattern(num_eigth_notes){
   
   return(pattern);
 }
+
+function mutateArray(base_pattern, mutate_rate){
+  var copy = []
+  // copy = ['h', 'r', 'l', 'h']
+
+  for(var i=0; i<base_pattern.length; i++){
+    if(Math.random()<mutate_rate){
+      if (base_pattern[i]=='h'){
+      
+        if(Math.random() < 0.5){
+          copy.push('l');
+        } else {
+          copy.push('r');
+        }
+      }
+      if (base_pattern[i]=='r'){
+
+        if(Math.random()<0.5) {
+          copy.push('l');
+        } else {
+          copy.push('h');
+        }
+      }
+
+      if (base_pattern[i]=='l'){
+
+        if(Math.random()<0.5){
+          copy.push('r');
+        } else {
+          copy.push('h');
+        }
+      }
+    } else {
+      copy.push(base_pattern[i]);
+    } 
+  }
+  return copy;
+}
+
+function generateRepeatedPattern(base_pattern, reps, mutate_rate){
+  var final_output = base_pattern.slice();
+
+  for(i=0; i<reps-1; i++){
+    var subpattern = mutateArray(base_pattern, mutate_rate);
+    final_output = final_output.concat(subpattern);  
+  }
+  return final_output;
+}
+
 
 function convertPatternToBeatString(pattern, note){
   var string = '';
@@ -47,10 +96,16 @@ function convertPatternToBeatString(pattern, note){
 var finalpattern = [] ;
 
 for (var t=0; t<100 ; t++) {
-    var pattern = generatePattern(16)
-    
-    for (var i=0; i<finalpattern.length; i++) {
-        console.log(JSON.stringify(pattern) == JSON.stringify(finalpattern[i]));
+    var pattern;
+    var reject = true;
+    while(reject){
+      pattern = generateRepeatedPattern(generatePattern(8), 4, Math.random())
+      reject = false;
+      for (var i=0; i<finalpattern.length; i++) {
+          if(JSON.stringify(pattern) == JSON.stringify(finalpattern[i])){
+            reject = true;
+          }
+      }
     }
 
     finalpattern.push(pattern)

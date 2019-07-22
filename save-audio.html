@@ -29,11 +29,17 @@ function init(){
     "url" : "wav/low.wav",
     "autostart" : false
   }).toMaster();
+  clickClip = new Tone.Player({
+    "url" : "wav/click.mp3",
+    "autostart" : false
+  }).toMaster();
+
 
   // Tone.connect(highClip, recorder);
   // Tone.connect(lowClip, recorder);
   highClip.connect(dest);
   lowClip.connect(dest);
+  clickClip.connect(dest);
 
   recorder.ondataavailable = function(e){
     chunks.push(e.data);
@@ -58,8 +64,8 @@ function createPart(pattern){
       //lowClip.start();
       lowClip.restart(time);
     }
-  }, pattern, "16n");
-  part.loop = 4;
+  }, pattern, "8n");
+  part.loop = 0;
   return part;
 }
 
@@ -68,16 +74,26 @@ function PlayPattern(id){
   var pattern = patterns[id];
   chunks = [];
 
+  var clicks = new Tone.Sequence(function(t,v){
+    clickClip.restart(t);
+  }, [1,2,3,4], "4n");
+  clicks.loop = 0;
+
   var part = createPart(pattern);
 
   recorder.start();
-  part.start();
+  clicks.start();
+  
+  Tone.Transport.schedule(function(){
+    part.start();
+  }, "1:0:0")
     
   Tone.Transport.schedule(function(){
     recorder.stop();
+    clicks.dispose();
     part.dispose();
     Tone.Transport.stop();
-  }, "4:0:0");
+  }, "5:0:0");
 
   Tone.Transport.bpm.value = document.querySelector("#bpm").value;
   //recorder.start();

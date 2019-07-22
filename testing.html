@@ -12,7 +12,6 @@
     </style>
 </head>
 <body>
-  <button id="new">NEW PATTERN</button>
   <div id="patternsList">
     <ol>
 
@@ -23,25 +22,6 @@
 
 for (var l=0; l<100; l++) {
   document.querySelector('#patternsList ol').insertAdjacentHTML('beforeend', '<li id="pattern'+l+'" onclick="PlayPattern('+l+')">' + patterns[l] + '</li>')
-}
-
-
-// ['l','h','r']
-
-function generatePattern(num_eigth_notes){
-  var pattern = [];
-
-  for(var b=0; b<num_eigth_notes;b++){
-      if(Math.random() < 0.33){
-        pattern.push('l');
-      } else if(Math.random() < 0.5 ) {
-        pattern.push('r') ;
-      } else {
-        pattern.push('h') ;
-      }
-  }
-  
-  return(pattern);
 }
 
 function convertPatternToBeatString(pattern, note){
@@ -87,8 +67,8 @@ function PlayPattern(id){
     sample: 'wav/high.wav'
   });
 
-  lowClip.loop = 2;
-  highClip.loop = 2;
+  lowClip.loop = 1;
+  highClip.loop = 1;
 
   lowClip.start();
   highClip.start();
@@ -96,30 +76,5 @@ function PlayPattern(id){
   Tone.Transport.start();
 }
 
-document.querySelector('#new').addEventListener('click', function(){
-
-  var pattern = patterns[40];
-
-  Tone.context.resume();
-  Tone.Transport.stop();
-
-  var ohClip = scribble.clip({
-    pattern: convertPatternToBeatString(pattern, 'l'),
-    sample: 'wav/low.wav'
-  });
-
-  var ohClip2 = scribble.clip({
-    pattern: convertPatternToBeatString(pattern, 'h'),
-    sample: 'wav/high.wav'
-  });
-
-  ohClip.loop = 2;
-  ohClip2.loop = 2;
-
-  ohClip.start();
-  ohClip2.start();
-  Tone.Transport.bpm.value = 240;
-  Tone.Transport.start();    
-})
 </script>
 </html>
