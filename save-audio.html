@@ -31,8 +31,8 @@ function init(){
 
   // Tone.connect(highClip, recorder);
   // Tone.connect(lowClip, recorder);
-  highClip.connect(recorder);
-  lowClip.connect(recorder);
+  highClip.connect(dest);
+  lowClip.connect(dest);
 
   recorder.ondataavailable = function(e){
     chunks.push(e.data);
