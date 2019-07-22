@@ -5,13 +5,14 @@
 </head>
 <body>
   <button onclick="init()">INIT AUDIO</button>
-  <button id="next">PLAY NEXT</button>
+  <p>Pattern ID: <input id="pattern" type="number" min=1 max=100></input></p>
+  <p>BPM: <input id="bpm" type="number" min=40 max=240></input></p>
+  <button id="next">PLAY</button>
   <audio controls></audio>
 </body>
 <script>
 
 var audio, actx, dest, recorder, highClip, lowClip;
-var pattern = 20;
 var chunks = [];
 var audio = document.querySelector('audio');
 
@@ -44,8 +45,7 @@ function init(){
 }
 
 document.querySelector('#next').addEventListener('click', function(){
-  PlayPattern(pattern);
-  pattern++;
+  PlayPattern(document.querySelector('#pattern').value);
 });
 
 function createPart(pattern){
@@ -78,7 +78,7 @@ function PlayPattern(id){
     Tone.Transport.stop();
   }, "4:0:0");
 
-  Tone.Transport.bpm.value = 144;
+  Tone.Transport.bpm.value = document.querySelector("#bpm").value;
   //recorder.start();
   Tone.Transport.start();
 }
