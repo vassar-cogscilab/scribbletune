@@ -11,7 +11,7 @@
 <script>
 
 var audio, actx, dest, recorder, highClip, lowClip;
-var pattern = 0;
+var pattern = 20;
 var chunks = [];
 var audio = document.querySelector('audio');
 
@@ -51,12 +51,12 @@ document.querySelector('#next').addEventListener('click', function(){
 function createPart(pattern){
   var part = new Tone.Sequence(function(time, value){
     if(value == 'h'){
-      highClip.start();
+      highClip.restart(time);
       //highClip.restart(time);
     }
     if(value == 'l'){
-      lowClip.start();
-      //lowClip.restart(time);
+      //lowClip.start();
+      lowClip.restart(time);
     }
   }, pattern, "8n");
   return part;
