@@ -1,40 +1,55 @@
 <html>
 <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/13.3.1/Tone.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/13.4.9/Tone.min.js"></script>
     <script src= "patterns.js"> </script>
 </head>
 <body>
+  <button onclick="init()">INIT AUDIO</button>
   <button id="next">PLAY NEXT</button>
-  <audio id="x" controls></audio>
+  <audio controls></audio>
 </body>
 <script>
 
-var audio = document.querySelector('#x');
-var actx = Tone.context;
-var dest = actx.createMediaStreamDestination();
-var recorder = new MediaRecorder(dest.stream);
-var highClip = new Tone.Player({
-	"url" : "wav/high.wav",
-	"autostart" : false,
-}).toMaster();
-var lowClip = new Tone.Player({
-	"url" : "wav/low.wav",
-	"autostart" : false,
-}).toMaster();
-
-highClip.connect(recorder);
-lowClip.connect(recorder);
-
+var audio, actx, dest, recorder, highClip, lowClip;
 var pattern = 0;
-
 var chunks = [];
-recorder.ondataavailable = function(e){
-  chunks.push(e.data);
+var audio = document.querySelector('audio');
+
+function init(){
+  actx = Tone.context;
+  actx.resume();
+  dest = actx.createMediaStreamDestination();
+  recorder = new MediaRecorder(dest.stream);
+  highClip = new Tone.Player({
+    "url" : "wav/frog.mp3",
+    "autostart" : true,
+    onload: loaded
+  }).toMaster();
+  lowClip = new Tone.Player({
+    "url" : "wav/frog.mp3",
+    "autostart" : true,
+    onload: loaded
+  }).toMaster();
+
+  function loaded(){
+    console.log('loaded!')
+  }
+
+  // Tone.connect(highClip, recorder);
+  // Tone.connect(lowClip, recorder);
+  // highClip.connect(recorder);
+  // lowClip.connect(recorder);
+
+  recorder.ondataavailable = function(e){
+    chunks.push(e.data);
+  }
+  recorder.onstop = function(){
+    var blob = new Blob(chunks, { type: 'audio/ogg; codecs=opus' });
+    audio.src = URL.createObjectURL(blob);
+  }
 }
-recorder.onstop = function(){
-  var blob = new Blob(chunks, { type: 'audio/ogg; codecs=opus' });
-  audio.src = URL.createObjectURL(blob);
-}
+
+
 
 document.querySelector('#next').addEventListener('click', function(){
   PlayPattern(pattern);
@@ -44,12 +59,15 @@ document.querySelector('#next').addEventListener('click', function(){
 function createPart(pattern){
   var part = new Tone.Sequence(function(time, value){
     if(value == 'h'){
-      highClip.restart(time);
+      highClip.start();
+      //highClip.restart(time);
     }
     if(value == 'l'){
-      lowClip.restart(time);
+      lowClip.start();
+      //lowClip.restart(time);
     }
-  }, pattern, "8n")
+  }, pattern, "8n");
+  return part;
 }
 
 function PlayPattern(id){
@@ -57,24 +75,18 @@ function PlayPattern(id){
   var pattern = patterns[id];
   chunks = [];
 
-  actx.resume();
-  // if(typeof highClip !== 'undefined'){
-  //   highClip.stop();
-  //   lowClip.stop();
-  // }
-  // Tone.Transport.stop();
-
   var part = createPart(pattern);
 
+  recorder.start();
   part.start();
-  
+    
   Tone.Transport.schedule(function(){
     recorder.stop();
     Tone.Transport.stop();
   }, "5:0:0");
 
   Tone.Transport.bpm.value = 240;
-  recorder.start();
+  //recorder.start();
   Tone.Transport.start();
 }
 
