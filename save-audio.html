@@ -21,24 +21,18 @@ function init(){
   dest = actx.createMediaStreamDestination();
   recorder = new MediaRecorder(dest.stream);
   highClip = new Tone.Player({
-    "url" : "wav/frog.mp3",
-    "autostart" : true,
-    onload: loaded
+    "url" : "wav/high.wav",
+    "autostart" : false
   }).toMaster();
   lowClip = new Tone.Player({
-    "url" : "wav/frog.mp3",
-    "autostart" : true,
-    onload: loaded
+    "url" : "wav/low.wav",
+    "autostart" : false
   }).toMaster();
-
-  function loaded(){
-    console.log('loaded!')
-  }
 
   // Tone.connect(highClip, recorder);
   // Tone.connect(lowClip, recorder);
-  // highClip.connect(recorder);
-  // lowClip.connect(recorder);
+  highClip.connect(recorder);
+  lowClip.connect(recorder);
 
   recorder.ondataavailable = function(e){
     chunks.push(e.data);
@@ -48,8 +42,6 @@ function init(){
     audio.src = URL.createObjectURL(blob);
   }
 }
-
-
 
 document.querySelector('#next').addEventListener('click', function(){
   PlayPattern(pattern);
