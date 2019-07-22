@@ -1,7 +1,6 @@
 <html>
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/13.3.1/Tone.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/scribbletune/1.9.4/scribbletune.js"></script>
     <script src= "patterns.js"> </script>
 </head>
 <body>
@@ -14,8 +13,18 @@ var audio = document.querySelector('#x');
 var actx = Tone.context;
 var dest = actx.createMediaStreamDestination();
 var recorder = new MediaRecorder(dest.stream);
-var highClip;
-var lowClip;
+var highClip = new Tone.Player({
+	"url" : "wav/high.wav",
+	"autostart" : false,
+}).toMaster();
+var lowClip = new Tone.Player({
+	"url" : "wav/low.wav",
+	"autostart" : false,
+}).toMaster();
+
+highClip.connect(recorder);
+lowClip.connect(recorder);
+
 var pattern = 0;
 
 var chunks = [];
@@ -32,23 +41,21 @@ document.querySelector('#next').addEventListener('click', function(){
   pattern++;
 });
 
-function convertPatternToBeatString(pattern, note){
-  var string = '';
-  for(var i=0; i<pattern.length; i++){
-    pattern[i] == note
-     
-    if (pattern[i]==note) {
-      string=string +'x'
-    } else {
-      string=string +'-'
+function createPart(pattern){
+  var part = new Tone.Sequence(function(time, value){
+    if(value == 'h'){
+      highClip.restart(time);
     }
-  }
-  return string;
+    if(value == 'l'){
+      lowClip.restart(time);
+    }
+  }, pattern, "8n")
 }
 
 function PlayPattern(id){
 
   var pattern = patterns[id];
+  chunks = [];
 
   actx.resume();
   // if(typeof highClip !== 'undefined'){
@@ -57,21 +64,9 @@ function PlayPattern(id){
   // }
   // Tone.Transport.stop();
 
-  lowClip = scribble.clip({
-    pattern: convertPatternToBeatString(pattern, 'l'),
-    sample: 'wav/low.wav'
-  });
+  var part = createPart(pattern);
 
-  highClip = scribble.clip({
-    pattern: convertPatternToBeatString(pattern, 'h'),
-    sample: 'wav/high.wav'
-  });
-
-  lowClip.loop = 2;
-  highClip.loop = 2;
-
-  lowClip.start();
-  highClip.start();
+  part.start();
   
   Tone.Transport.schedule(function(){
     recorder.stop();
